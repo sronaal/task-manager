@@ -36,4 +36,20 @@ export const register = async (req = request, res = response) => {
 }
 
 
-export const login = async (req = request, res = response) => { }
+export const login = async (req = request, res = response) => {
+
+    try {
+        const { email, password } = req.body
+
+        const user = await daoUser.buscarUsarioPorEmail(email)
+        if (!user) return res.status(404).json({ error: 'User not found' })
+
+        const isMatch = bcrypt.compareSync(password, user.password)
+        if (!isMatch) return res.status(401).json({ error: 'Invalid credentials' })
+
+        res.status(200).json({ message: 'Login successful' })
+    } catch (error) {
+        console.log(error)
+        return res.status(500).json({ message: 'Internal server error' })
+    }
+ }
