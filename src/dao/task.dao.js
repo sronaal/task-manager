@@ -5,6 +5,7 @@ class DaoTask{
 
     crearTarea(tarea){
 
+        
         return taskModel.create(tarea)
     }
 
@@ -23,7 +24,11 @@ class DaoTask{
         return taskModel.updateOne({_id: tarea._id}, {$set: tarea})
     }
 
-    eliminarTarea(){}
+    eliminarTarea(id){
+
+        return taskModel.deleteOne({_id: id})
+
+    }
 
     obtenerTareasPorUsuario(){}
 
