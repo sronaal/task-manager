@@ -2,7 +2,7 @@ import { request, response } from 'express'
 import bcrypt from 'bcryptjs'
 import userModel from '../models/user.model.js'
 import DaoUser from '../dao/user.dao.js'
-
+import {crearToken} from '../helpers/jwt.js'
 
 const daoUser = new DaoUser()
 
@@ -47,7 +47,13 @@ export const login = async (req = request, res = response) => {
         const isMatch = bcrypt.compareSync(password, user.password)
         if (!isMatch) return res.status(401).json({ error: 'Invalid credentials' })
 
-        res.status(200).json({ message: 'Login successful' })
+        let userData = {
+            id: user._id,
+            username: user.username,
+            email: user.email
+        }
+        let token = crearToken(userData)    
+        res.status(200).json({ 'msg' : 'Loggin succefull', token })
     } catch (error) {
         console.log(error)
         return res.status(500).json({ message: 'Internal server error' })
